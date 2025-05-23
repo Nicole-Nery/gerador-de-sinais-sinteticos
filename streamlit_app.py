@@ -1,4 +1,5 @@
 import streamlit as st
+import plotly.graph_objects as go
 from funcoes import *
 
 st.set_page_config(page_icon='🔊', page_title='Gerador de sinais', layout='wide')
@@ -70,14 +71,21 @@ if aplicar_desc:
 # Plot
 st.subheader("📈 Visualização dos sinais")
 
-fig, ax = plt.subplots()
+fig = go.Figure()
+
 for nome, t, y in sinais:
-    ax.plot(t, y, label=nome)
-ax.set_xlabel("Tempo (s)")
-ax.set_ylabel("Amplitude")
-ax.set_title("Sinais gerados")
-ax.legend()
-st.pyplot(fig)
+    fig.add_trace(go.Scatter(x=t, y=y, mode='lines', name=nome))
+
+fig.update_layout(
+    title="Sinais gerados",
+    xaxis_title="Tempo (s)",
+    yaxis_title="Amplitude",
+    template="plotly_white",
+    height=500,
+    margin=dict(l=40, r=40, t=60, b=40)
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 # Exportação
 st.subheader("💾 Exportar sinal base")
