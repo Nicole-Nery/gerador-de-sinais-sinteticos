@@ -56,7 +56,7 @@ if adicionar_mudanca:
 
 # --- Plot
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=df["t"], y=df["sinal"], mode='lines', name=tipo_sinal))
+fig.add_trace(go.Scatter(x=df['t'], y=df['sinal'], mode='lines', name=tipo_sinal))
 fig.update_layout(
     title="Sinal gerado",
     xaxis_title="Tempo (s)",
