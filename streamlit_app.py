@@ -2,92 +2,72 @@ import streamlit as st
 import plotly.graph_objects as go
 from funcoes import *
 
-st.set_page_config(page_icon='🔊', page_title='Gerador de sinais', layout='wide')
-st.title("Gerador de sinais sintéticos")
+
+# --- Título principal
+st.title("Gerador de Sinais Sintéticos")
+
+# --- Sidebar: seleção do tipo de sinal
+st.sidebar.header("Configuração do sinal")
+
+tipo_sinal = st.sidebar.selectbox("Tipo de sinal", ["Senoidal", "Quadrada", "Triangular", "Aleatório"])
 
 # Parâmetros comuns
-col1, col2, col3 = st.columns(3)
-with col1:
-    fs = st.number_input("Frequência de amostragem (Hz)", value=1000)
-with col2:
-    tf = st.number_input("Tempo de duração (s)", value=2.0)
-with col3:
-    offset = st.number_input("Offset", value=0.0)
-
-# Escolha do tipo de sinal
-tipo = st.selectbox("Tipo de sinal", ["Senoide", "Quadrada", "Triangular", "Aleatório"])
-
-amp = st.slider("Amplitude", 0.1, 5.0, 1.0)
-f = st.slider("Frequência (Hz)", 1, 50, 5) if tipo != "Aleatório" else None
+offset = st.sidebar.slider("Offset", -10.0, 10.0, 0.0)
+amplitude = st.sidebar.slider("Amplitude", 0.1, 10.0, 1.0)
+frequencia = st.sidebar.slider("Frequência (Hz)", 0.1, 50.0, 1.0)
+fs = st.sidebar.slider("Frequência de amostragem (Hz)", 10, 1000, 100)
+duracao = st.sidebar.slider("Duração do sinal (s)", 1, 10, 5)
 
 # Geração do sinal base
-if tipo == "Senoide":
-    df = gerarSenoide(offset, amp, fs, tf, f)
-elif tipo == "Quadrada":
-    df = gerarQuadrada(offset, amp, fs, tf, f)
-elif tipo == "Triangular":
-    df = gerarTriangular(offset, amp, fs, tf, f)
-elif tipo == "Aleatório":
-    dist = st.selectbox("Distribuição aleatória", ["normal", "uniforme", "binomial"])
-    df = gerarSinalAleatorio(offset, amp, fs, tf, dist)
+if tipo_sinal == "Senoidal":
+    df = gerarSenoide(offset, amplitude, fs, duracao, frequencia)
+elif tipo_sinal == "Quadrada":
+    df = gerarQuadrada(offset, amplitude, fs, duracao, frequencia)
+elif tipo_sinal == "Triangular":
+    df = gerarTriangular(offset, amplitude, fs, duracao, frequencia)
+elif tipo_sinal == "Aleatório":
+    distribuicao = st.sidebar.selectbox("Distribuição", ["normal", "uniforme", "binomial"])
+    df = gerarSinalAleatorio(offset, amplitude, fs, duracao, distribuicao)
 
-sinais = [("Sinal base", df['t'], df['sinal'])]
+# --- Efeitos adicionais
+st.sidebar.subheader("Efeitos adicionais")
+adicionar_ruido = st.sidebar.checkbox("Ruído")
+adicionar_tendencia = st.sidebar.checkbox("Tendência")
+adicionar_descont = st.sidebar.checkbox("Descontinuidade")
+adicionar_mudanca = st.sidebar.checkbox("Mudança brusca de amplitude")
 
-# Efeitos adicionais
-st.subheader("⚙️ Efeitos adicionais")
+# --- Parâmetros extras
+if adicionar_ruido:
+    snr = st.sidebar.slider("SNR (dB)", 0, 50, 20)
+    df = adicionarRuido(df, snr)
+    nome_coluna = "sinal_com_ruido"
+else:
+    nome_coluna = "sinal"
 
-col1, col2, col3 = st.columns(3)
+if adicionar_tendencia:
+    tipo_tend = st.sidebar.selectbox("Tipo de tendência", ["linear", "quadratica"])
+    df = adicionarTendencia(df, tipo_tend)
+    nome_coluna = "sinal_com_tendencia"
 
-with col1:
-    aplicar_ruido = st.checkbox("Ruído")
-    if aplicar_ruido:
-        snr = st.slider("SNR (dB)", 0, 40, 10)
-        df_ruido = adicionarRuido(df, snr)
-        sinais.append(("Com Ruído", df_ruido['t'], df_ruido['sinal_com_ruido']))
+if adicionar_descont:
+    t_quebra = st.sidebar.slider("Tempo de descontinuidade (s)", 0.0, float(duracao), 2.0)
+    salto = st.sidebar.slider("Valor do salto", -10.0, 10.0, 2.0)
+    df = adicionarDescontinuidade(df, t_quebra, salto)
+    nome_coluna = "sinal_descont"
 
-with col2:
-    aplicar_tend = st.checkbox("Tendência")
-    if aplicar_tend:
-        tipo_tend = st.selectbox("Tipo de tendência", ["linear", "quadratica"])
-        df_tend = adicionarTendencia(df, tipo_tend)
-        sinais.append((f"Tendência {tipo_tend}", df_tend['t'], df_tend[f'sinal_com_tendencia']))
+if adicionar_mudanca:
+    t_mudanca = st.sidebar.slider("Tempo da mudança (s)", 0.0, float(duracao), 2.0)
+    nova_amp = st.sidebar.slider("Nova amplitude", 0.1, 10.0, 2.0)
+    df = adicionarMudancaBrusca(df, t_mudanca, nova_amp)
+    nome_coluna = "sinal_com_mudanca"
 
-with col3:
-    aplicar_mudanca = st.checkbox("Mudança brusca")
-    if aplicar_mudanca:
-        t_m = st.slider("Tempo da mudança", 0.1, tf, tf/2.0)
-        novo_amp = st.slider("Nova amplitude após mudança", 0.1, 5.0, 2.0)
-        df_mudanca = adicionarMudancaBrusca(df, t_m, novo_amp)
-        sinais.append(("Mudança brusca", df_mudanca['t'], df_mudanca['sinal_com_mudanca']))
-
-# Descontinuidade
-aplicar_desc = st.checkbox("Adicionar descontinuidade")
-if aplicar_desc:
-    t_quebra = st.slider("Tempo da quebra", 0.1, tf, tf/2.0)
-    salto = st.slider("Valor do salto", -5.0, 5.0, 1.0)
-    df_desc = adicionarDescontinuidade(df, t_quebra, salto)
-    sinais.append(("Descontinuidade", df_desc['t'], df_desc['sinal_descont']))
-
-# Plot
-st.subheader("📈 Visualização dos sinais")
-
+# --- Plot
 fig = go.Figure()
-
-for nome, t, y in sinais:
-    fig.add_trace(go.Scatter(x=t, y=y, mode='lines', name=nome))
-
+fig.add_trace(go.Scatter(x=df["t"], y=df[nome_coluna], mode='lines', name=tipo_sinal))
 fig.update_layout(
-    title="Sinais gerados",
+    title="Sinal gerado",
     xaxis_title="Tempo (s)",
     yaxis_title="Amplitude",
-    template="plotly_white",
-    height=500,
-    margin=dict(l=40, r=40, t=60, b=40)
+    template="plotly_white"
 )
-
 st.plotly_chart(fig, use_container_width=True)
-
-# Exportação
-st.subheader("💾 Exportar sinal base")
-csv = df.to_csv(index=False).encode('utf-8')
-st.download_button("Baixar CSV do sinal base", data=csv, file_name="sinal_base.csv", mime="text/csv")
