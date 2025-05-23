@@ -57,6 +57,7 @@ def adicionarTendencia (df_sinal, tipo):
 
     sinal_com_tendencia = sinal + tendencia
     df_com_tendencia = pd.DataFrame({'t': t, 'sinal': sinal_com_tendencia})
+    return df_com_tendencia
 
 def adicionarDescontinuidade(df_sinal, t_quebra, valor_salto):
     t = df_sinal['t']
