@@ -43,7 +43,7 @@ def adicionarRuido (df_sinal, snr_dB):
     ruido = np.random.normal(0, np.sqrt(noise_power), size = sinal.shape)
     
     sinal_com_ruido = sinal + ruido
-    df_sinal_com_ruido = pd.DataFrame({'t': t, 'sinal_com_ruido': sinal_com_ruido})
+    df_sinal_com_ruido = pd.DataFrame({'t': t, 'sinal': sinal_com_ruido})
     return df_sinal_com_ruido
 
 def adicionarTendencia (df_sinal, tipo):
@@ -56,14 +56,14 @@ def adicionarTendencia (df_sinal, tipo):
         tendencia = 0.1 * t**2 
 
     sinal_com_tendencia = sinal + tendencia
-    df_com_tendencia = pd.DataFrame({'t': t, 'sinal_com_tendencia': sinal_com_tendencia})
+    df_com_tendencia = pd.DataFrame({'t': t, 'sinal': sinal_com_tendencia})
 
 def adicionarDescontinuidade(df_sinal, t_quebra, valor_salto):
     t = df_sinal['t']
     sinal = df_sinal['sinal'].copy()
 
     sinal[t >= t_quebra] += valor_salto
-    df_descontinuidade = pd.DataFrame({'t': t, 'sinal_descont': sinal})
+    df_descontinuidade = pd.DataFrame({'t': t, 'sinal': sinal})
     return df_descontinuidade
 
 def adicionarMudancaBrusca(df_sinal, t_mudanca, novo_amp):
@@ -77,5 +77,5 @@ def adicionarMudancaBrusca(df_sinal, t_mudanca, novo_amp):
     # Aplica a nova amplitude a partir do tempo t_mudanca
     sinal[t >= t_mudanca] *= fator
 
-    df_mudanca = pd.DataFrame({'t': t, 'sinal_com_mudanca': sinal})
+    df_mudanca = pd.DataFrame({'t': t, 'sinal': sinal})
     return df_mudanca
