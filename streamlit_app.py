@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from funcoes import *
 
+st.set_page_config('Gerador de Sinais', layout='wide')
 # --- Título principal
 st.title("Gerador de Sinais Sintéticos")
 
