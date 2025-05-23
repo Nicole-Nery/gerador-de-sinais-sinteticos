@@ -2,7 +2,6 @@ import streamlit as st
 import plotly.graph_objects as go
 from funcoes import *
 
-
 # --- Título principal
 st.title("Gerador de Sinais Sintéticos")
 
@@ -40,30 +39,24 @@ adicionar_mudanca = st.sidebar.checkbox("Mudança brusca de amplitude")
 if adicionar_ruido:
     snr = st.sidebar.slider("SNR (dB)", 0, 50, 20)
     df = adicionarRuido(df, snr)
-    nome_coluna = "sinal_com_ruido"
-else:
-    nome_coluna = "sinal"
 
 if adicionar_tendencia:
     tipo_tend = st.sidebar.selectbox("Tipo de tendência", ["linear", "quadratica"])
     df = adicionarTendencia(df, tipo_tend)
-    nome_coluna = "sinal_com_tendencia"
 
 if adicionar_descont:
     t_quebra = st.sidebar.slider("Tempo de descontinuidade (s)", 0.0, float(duracao), 2.0)
     salto = st.sidebar.slider("Valor do salto", -10.0, 10.0, 2.0)
     df = adicionarDescontinuidade(df, t_quebra, salto)
-    nome_coluna = "sinal_descont"
 
 if adicionar_mudanca:
     t_mudanca = st.sidebar.slider("Tempo da mudança (s)", 0.0, float(duracao), 2.0)
     nova_amp = st.sidebar.slider("Nova amplitude", 0.1, 10.0, 2.0)
     df = adicionarMudancaBrusca(df, t_mudanca, nova_amp)
-    nome_coluna = "sinal_com_mudanca"
 
 # --- Plot
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=df["t"], y=df[nome_coluna], mode='lines', name=tipo_sinal))
+fig.add_trace(go.Scatter(x=df["t"], y=df["sinal"], mode='lines', name=tipo_sinal))
 fig.update_layout(
     title="Sinal gerado",
     xaxis_title="Tempo (s)",
