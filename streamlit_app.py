@@ -5,15 +5,16 @@ from funcoes import *
 st.set_page_config('Gerador de Sinais', layout='wide')
 st.title("Gerador de Sinais Sintéticos")
 
-st.sidebar.header("Configuração do sinal")
+st.sidebar.header("Configurações do sinal")
 tipo_sinal = st.sidebar.selectbox("Tipo de sinal", ["Senoidal", "Quadrada", "Triangular", "Aleatório"])
 
 # Parâmetros comuns
-offset = st.sidebar.slider("Offset", -10.0, 10.0, 0.0, step=0.5)
-amplitude = st.sidebar.slider("Amplitude", 0.1, 10.0, 1.0, step=0.1)
-frequencia = st.sidebar.slider("Frequência (Hz)", 0.1, 50.0, 1.0, step=0.1)
-fs = st.sidebar.slider("Frequência de amostragem (Hz)", 10, 1000, 100, step=1)
-duracao = st.sidebar.slider("Duração do sinal (s)", 1, 10, 5, step=1)
+with st.expander():
+    offset = st.sidebar.slider("Offset", -10.0, 10.0, 0.0, step=0.5)
+    amplitude = st.sidebar.slider("Amplitude", 0.1, 10.0, 1.0, step=0.1)
+    frequencia = st.sidebar.slider("Frequência (Hz)", 0.1, 50.0, 1.0, step=0.1)
+    fs = st.sidebar.slider("Frequência de amostragem (Hz)", 10, 1000, 100, step=1)
+    duracao = st.sidebar.slider("Duração do sinal (s)", 1, 10, 5, step=1)
 
 # Geração do sinal base
 if tipo_sinal == "Senoidal":
@@ -26,12 +27,11 @@ elif tipo_sinal == "Aleatório":
     distribuicao = st.sidebar.selectbox("Distribuição", ["normal", "uniforme", "binomial"])
     df = gerarSinalAleatorio(offset, amplitude, fs, duracao, distribuicao)
 
-# Efeitos adicionais
-st.sidebar.subheader("Efeitos adicionais")
-adicionar_ruido = st.sidebar.checkbox("Ruído")
-adicionar_tendencia = st.sidebar.checkbox("Tendência")
-adicionar_descont = st.sidebar.checkbox("Descontinuidade")
-adicionar_mudanca = st.sidebar.checkbox("Mudança brusca de amplitude")
+with st.expander("Efeitos adicionais"):
+    adicionar_ruido = st.sidebar.checkbox("Ruído")
+    adicionar_tendencia = st.sidebar.checkbox("Tendência")
+    adicionar_descont = st.sidebar.checkbox("Descontinuidade")
+    adicionar_mudanca = st.sidebar.checkbox("Mudança brusca de amplitude")
 
 # Parâmetros extras
 if adicionar_ruido:
