@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import square, sawtooth
 import pandas as pd
+from pyts.image import GramianAngularField
 
 def gerarSenoide(offset, amp, fs, tf, f):
     t = np.linspace(0, tf, int(fs * tf))
@@ -17,7 +18,7 @@ def gerarQuadrada(offset, amp, fs, tf, f):
 
 def gerarTriangular(offset, amp, fs, tf, f):
     t = np.linspace(0, tf, int(fs * tf))
-    triangular = offset + amp * sawtooth(2 * np.pi * f * t, width=0.5)  # width=0.5 → forma triangular simétrica
+    triangular = offset + amp * sawtooth(2 * np.pi * f * t, width=0.5)  # width=0.5 -forma triangular simétrica
     df_triangular = pd.DataFrame({'t': t, 'sinal': triangular})
     return df_triangular
 
@@ -80,3 +81,12 @@ def adicionarMudancaBrusca(df_sinal, t_mudanca, novo_amp):
 
     df_mudanca = pd.DataFrame({'t': t, 'sinal': sinal})
     return df_mudanca
+
+def aplicarGAF(df, metodo='summation'):
+    sinal = df['sinal']
+    
+    X = sinal.reshape(1, -1) 
+
+    gaf = GramianAngularField(method=metodo)
+    X_gaf = gaf.fit_transform(X)
+    return X_gaf[0] 
