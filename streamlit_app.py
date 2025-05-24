@@ -77,4 +77,4 @@ axes[2].set_title('Gramian Angular Difference Field')
 fig.colorbar(im, ax=axes[2], fraction=0.046, pad=0.04)
 
 plt.tight_layout()
-plt.show()
+st.pyplot(fig)
