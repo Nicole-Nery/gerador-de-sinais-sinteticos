@@ -9,7 +9,7 @@ st.sidebar.header("Configurações do sinal")
 tipo_sinal = st.sidebar.selectbox("Tipo de sinal", ["Senoidal", "Quadrada", "Triangular", "Aleatório"])
 
 # Parâmetros comuns
-with st.expander():
+with st.expander("Parâmetros básicos"):
     offset = st.sidebar.slider("Offset", -10.0, 10.0, 0.0, step=0.5)
     amplitude = st.sidebar.slider("Amplitude", 0.1, 10.0, 1.0, step=0.1)
     frequencia = st.sidebar.slider("Frequência (Hz)", 0.1, 50.0, 1.0, step=0.1)
