@@ -64,17 +64,17 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Gramian Angular Field")
-fig, axes = plt.subplots (1, 2, figsize =(15, 5))
+fig, axes = plt.subplots (1, 2, figsize =(10, 5))
 
 # Imagem GASF
-im = axes[1].imshow(aplicarGAF(df, 'summation'), cmap='rainbow', origin='lower')
-axes[1].set_title('Gramian Angular Summation Field')
-fig.colorbar(im, ax=axes[1], fraction=0.046, pad=0.04)
+im = axes[0].imshow(aplicarGAF(df, 'summation'), cmap='rainbow', origin='lower')
+axes[0].set_title('Gramian Angular Summation Field')
+fig.colorbar(im, ax=axes[0], fraction=0.046, pad=0.04)
 
 # Imagem GADF
-im = axes[2].imshow(aplicarGAF(df, 'difference'), cmap='rainbow', origin='lower')
-axes[2].set_title('Gramian Angular Difference Field')
-fig.colorbar(im, ax=axes[2], fraction=0.046, pad=0.04)
+im = axes[1].imshow(aplicarGAF(df, 'difference'), cmap='rainbow', origin='lower')
+axes[1].set_title('Gramian Angular Difference Field')
+fig.colorbar(im, ax=axes[1], fraction=0.046, pad=0.04)
 
 plt.tight_layout()
 st.pyplot(fig)
