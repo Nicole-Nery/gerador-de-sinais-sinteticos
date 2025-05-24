@@ -85,7 +85,7 @@ def adicionarMudancaBrusca(df_sinal, t_mudanca, novo_amp):
 def aplicarGAF(df, metodo='summation'):
     sinal = df['sinal']
     
-    X = sinal.reshape(1, -1) 
+    X = np.array(sinal).reshape(1, -1) 
 
     gaf = GramianAngularField(method=metodo)
     X_gaf = gaf.fit_transform(X)
