@@ -17,16 +17,16 @@ with st.sidebar:
         fs = st.slider("Frequência de amostragem (Hz)", 10, 1000, 100, step=1)
         duracao = st.slider("Duração do sinal (s)", 1, 10, 5, step=1)
 
-# Geração do sinal base
-if tipo_sinal == "Senoidal":
-    df = gerarSenoide(offset, amplitude, fs, duracao, frequencia)
-elif tipo_sinal == "Quadrada":
-    df = gerarQuadrada(offset, amplitude, fs, duracao, frequencia)
-elif tipo_sinal == "Triangular":
-    df = gerarTriangular(offset, amplitude, fs, duracao, frequencia)
-elif tipo_sinal == "Aleatório":
-    distribuicao = st.sidebar.selectbox("Distribuição", ["normal", "uniforme", "binomial"])
-    df = gerarSinalAleatorio(offset, amplitude, fs, duracao, distribuicao)
+        # Geração do sinal base
+        if tipo_sinal == "Senoidal":
+            df = gerarSenoide(offset, amplitude, fs, duracao, frequencia)
+        elif tipo_sinal == "Quadrada":
+            df = gerarQuadrada(offset, amplitude, fs, duracao, frequencia)
+        elif tipo_sinal == "Triangular":
+            df = gerarTriangular(offset, amplitude, fs, duracao, frequencia)
+        elif tipo_sinal == "Aleatório":
+            distribuicao = st.selectbox("Distribuição", ["normal", "uniforme", "binomial"])
+            df = gerarSinalAleatorio(offset, amplitude, fs, duracao, distribuicao)
 
 with st.sidebar:
     with st.expander("Efeitos adicionais"):
@@ -35,24 +35,24 @@ with st.sidebar:
         adicionar_descont = st.checkbox("Descontinuidade")
         adicionar_mudanca = st.checkbox("Mudança brusca de amplitude")
 
-# Parâmetros extras
-if adicionar_ruido:
-    snr = st.sidebar.slider("SNR (dB)", 0, 50, 20, step=1)
-    df = adicionarRuido(df, snr)
+        # Parâmetros extras
+        if adicionar_ruido:
+            snr = st.slider("SNR (dB)", 0, 50, 20, step=1)
+            df = adicionarRuido(df, snr)
 
-if adicionar_tendencia:
-    tipo_tend = st.sidebar.selectbox("Tipo de tendência", ["linear", "quadratica"])
-    df = adicionarTendencia(df, tipo_tend)
+        if adicionar_tendencia:
+            tipo_tend = st.selectbox("Tipo de tendência", ["linear", "quadratica"])
+            df = adicionarTendencia(df, tipo_tend)
 
-if adicionar_descont:
-    t_quebra = st.sidebar.slider("Tempo de descontinuidade (s)", 0.0, float(duracao), 2.0)
-    salto = st.sidebar.slider("Valor do salto", -10.0, 10.0, 2.0)
-    df = adicionarDescontinuidade(df, t_quebra, salto)
+        if adicionar_descont:
+            t_quebra = st.slider("Tempo de descontinuidade (s)", 0.0, float(duracao), 2.0)
+            salto = st.slider("Valor do salto", -10.0, 10.0, 2.0)
+            df = adicionarDescontinuidade(df, t_quebra, salto)
 
-if adicionar_mudanca:
-    t_mudanca = st.sidebar.slider("Tempo da mudança (s)", 0.0, float(duracao), 2.0)
-    nova_amp = st.sidebar.slider("Nova amplitude", 0.1, 10.0, 2.0, step=0.1)
-    df = adicionarMudancaBrusca(df, t_mudanca, nova_amp)
+        if adicionar_mudanca:
+            t_mudanca = st.slider("Tempo da mudança (s)", 0.0, float(duracao), 2.0)
+            nova_amp = st.slider("Nova amplitude", 0.1, 10.0, 2.0, step=0.1)
+            df = adicionarMudancaBrusca(df, t_mudanca, nova_amp)
 
 # Plot
 fig = go.Figure()
