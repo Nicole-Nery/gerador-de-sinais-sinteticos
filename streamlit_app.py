@@ -9,7 +9,7 @@ st.sidebar.header("Configurações do sinal")
 tipo_sinal = st.sidebar.selectbox("Tipo de sinal", ["Senoidal", "Quadrada", "Triangular", "Aleatório"])
 
 # Parâmetros comuns
-with st.expander("Parâmetros básicos"):
+with st.sidebar.expander("Parâmetros básicos"):
     offset = st.sidebar.slider("Offset", -10.0, 10.0, 0.0, step=0.5)
     amplitude = st.sidebar.slider("Amplitude", 0.1, 10.0, 1.0, step=0.1)
     frequencia = st.sidebar.slider("Frequência (Hz)", 0.1, 50.0, 1.0, step=0.1)
@@ -27,7 +27,7 @@ elif tipo_sinal == "Aleatório":
     distribuicao = st.sidebar.selectbox("Distribuição", ["normal", "uniforme", "binomial"])
     df = gerarSinalAleatorio(offset, amplitude, fs, duracao, distribuicao)
 
-with st.expander("Efeitos adicionais"):
+with st.sidebar.expander("Efeitos adicionais"):
     adicionar_ruido = st.sidebar.checkbox("Ruído")
     adicionar_tendencia = st.sidebar.checkbox("Tendência")
     adicionar_descont = st.sidebar.checkbox("Descontinuidade")
