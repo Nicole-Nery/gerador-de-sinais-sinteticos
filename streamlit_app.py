@@ -11,11 +11,11 @@ tipo_sinal = st.sidebar.selectbox("Tipo de sinal", ["Senoidal", "Quadrada", "Tri
 # Parâmetros comuns
 with st.sidebar:
     with st.expander("Parâmetros básicos"):
+        fs = st.slider("Frequência de amostragem (Hz)", 10, 1000, 100, step=1)
+        duracao = st.slider("Duração do sinal (s)", 1, 10, 5, step=1)
         offset = st.slider("Offset", -10.0, 10.0, 0.0, step=0.5)
         amplitude = st.slider("Amplitude", 0.1, 10.0, 1.0, step=0.1)
         frequencia = st.slider("Frequência (Hz)", 0.1, 50.0, 1.0, step=0.1)
-        fs = st.slider("Frequência de amostragem (Hz)", 10, 1000, 100, step=1)
-        duracao = st.slider("Duração do sinal (s)", 1, 10, 5, step=1)
 
         # Geração do sinal base
         if tipo_sinal == "Senoidal":
@@ -60,7 +60,8 @@ fig.add_trace(go.Scatter(x=df['t'], y=df['sinal'], mode='lines', name=tipo_sinal
 fig.update_layout(
     xaxis_title="Tempo (s)",
     yaxis_title="Amplitude",
-    template="plotly_white"
+    template="plotly_white",
+    height=300
 )
 st.plotly_chart(fig, use_container_width=True)
 
