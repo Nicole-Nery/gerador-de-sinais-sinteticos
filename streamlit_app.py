@@ -61,7 +61,7 @@ fig.update_layout(
     xaxis_title="Tempo (s)",
     yaxis_title="Amplitude",
     template="plotly_white",
-    height=100
+    height=200
 )
 st.plotly_chart(fig, use_container_width=True)
 
