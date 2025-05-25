@@ -66,7 +66,7 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Gramian Angular Field")
-fig, axes = plt.subplots (1, 2, figsize =(10, 5))
+fig, axes = plt.subplots (1, 2, figsize =(8, 4))
 
 # Imagem GASF
 im = axes[0].imshow(aplicarGAF(df, 'summation'), cmap='rainbow', origin='lower')
